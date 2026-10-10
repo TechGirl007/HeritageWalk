@@ -12,6 +12,20 @@ Built for the [DEV Hacktoberfest 2026 Open-Source AI Challenge, Week 1: "Touch G
 
 ![Palace Hotel stop: photo, year built, gemma3's guide text, something to look for, and a fun fact](screenshots/palace-hotel.jpg)
 
+
+## How it works
+
+```
+Wikipedia ─► fetch_wiki.py ─► gemma3 via Ollama ─► stops.json ─► build_page.py ─► index.html
+  facts                        writes the guide      + overrides.json            map, dots, trail
+                               (runs locally)         (human fact-check)
+```
+
+1. `fetch_wiki.py` pulls each stop's article, coordinates and photo from Wikipedia into `data/wiki.json`.
+2. `generate_guide.py` asks **gemma3** (running locally with [Ollama](https://ollama.com)) to turn each article into a short "you're standing in front of it" guide: story, what to look for, and a fun fact. Results are cached per stop.
+3. `overrides.json` holds the corrections a human made after checking gemma's drafts against Wikipedia.
+4. `build_page.py` bakes everything into one self-contained `index.html`, with a [Leaflet](https://leafletjs.com) map and [OpenStreetMap](https://www.openstreetmap.org) tiles.
+
 On an iPhone:
 
 <p>
@@ -28,18 +42,6 @@ On an iPhone:
 5. Use **Next ›** and **‹ Prev** to move along the trail, or **🔊 Listen** to have the story read aloud.
 6. Changed your mind? Tap **↺ Change start** at the top to pick a different starting point.
 
-## How it works
-
-```
-Wikipedia ─► fetch_wiki.py ─► gemma3 via Ollama ─► stops.json ─► build_page.py ─► index.html
-  facts                        writes the guide      + overrides.json            map, dots, trail
-                               (runs locally)         (human fact-check)
-```
-
-1. `fetch_wiki.py` pulls each stop's article, coordinates and photo from Wikipedia into `data/wiki.json`.
-2. `generate_guide.py` asks **gemma3** (running locally with [Ollama](https://ollama.com)) to turn each article into a short "you're standing in front of it" guide: story, what to look for, and a fun fact. Results are cached per stop.
-3. `overrides.json` holds the corrections a human made after checking gemma's drafts against Wikipedia.
-4. `build_page.py` bakes everything into one self-contained `index.html`, with a [Leaflet](https://leafletjs.com) map and [OpenStreetMap](https://www.openstreetmap.org) tiles.
 
 ## Run it yourself
 
