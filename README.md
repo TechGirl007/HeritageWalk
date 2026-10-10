@@ -12,6 +12,22 @@ Built for the [DEV Hacktoberfest 2026 Open-Source AI Challenge, Week 1: "Touch G
 
 ![Palace Hotel stop: photo, year built, gemma3's guide text, something to look for, and a fun fact](screenshots/palace-hotel.jpg)
 
+On an iPhone:
+
+<p>
+  <img src="screenshots/phone-map.jpg" width="280" alt="The dotted trail and numbered stops on a phone">
+  <img src="screenshots/phone-stop.jpg" width="280" alt="Treasury Buildings stop card on a phone">
+</p>
+
+## Using it on your phone
+
+1. Open the link and **pick where you'd like to start**. The map previews that route.
+2. Tap **Start the walk**. If your phone asks for your location, tap **Allow** so the blue "you are here" dot can follow you. Your location stays on your phone.
+3. Each stop opens as a card with a photo and its story. **Tap the ✕ in the top corner of the card** to put it away and see the whole map.
+4. **Tap any numbered dot on the map** to read about that building again. Stops also open by themselves when you're within 40 m.
+5. Use **Next ›** and **‹ Prev** to move along the trail, or **🔊 Listen** to have the story read aloud.
+6. Changed your mind? Tap **↺ Change start** at the top to pick a different starting point.
+
 ## How it works
 
 ```
