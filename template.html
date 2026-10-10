@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3a32">
+<title>Station to Swan</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1d2421;
+    --muted: #5e6b65;
+    --paper: #fbf8f2;
+    --card: #ffffff;
+    --line: #e7e1d6;
+    --accent: #b5532a;      /* heritage brick */
+    --accent-soft: #f6e6dc;
+    --green: #1f3a32;
+    --done: #3f7d5c;
+    --me: #2a6fdb;
+    --shadow: 0 -8px 30px rgba(20, 30, 25, .18);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: Inter, system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    overflow: hidden;
+  }
+  #map { position: absolute; inset: 0; background: #e9e4da; }
+
+  /* header */
+  .top {
+    position: absolute; z-index: 1000; top: 0; left: 0; right: 0;
+    padding: calc(env(safe-area-inset-top) + 12px) 16px 12px;
+    background: linear-gradient(to bottom, rgba(31,58,50,.96), rgba(31,58,50,.88));
+    color: #fff; display: flex; align-items: center; gap: 12px;
+  }
+  .top h1 { font-family: Fraunces, Georgia, serif; font-size: 20px; margin: 0; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .top .sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .top .sub { font-size: 12px; opacity: .8; margin-top: 2px; }
+  .top .grow { flex: 1; min-width: 0; }
+  .progress {
+    font-size: 12px; font-weight: 600; background: rgba(255,255,255,.14);
+    padding: 6px 10px; border-radius: 999px; white-space: nowrap;
+  }
+
+  /* map buttons */
+  .fab {
+    position: absolute; z-index: 1000; right: 16px;
+    bottom: calc(var(--sheet-h, 0px) + 16px);
+    width: 48px; height: 48px; border-radius: 50%; border: 0;
+    background: var(--card); box-shadow: 0 4px 14px rgba(0,0,0,.2);
+    display: grid; place-items: center; cursor: pointer; transition: bottom .25s;
+  }
+  .fab svg { width: 22px; height: 22px; }
+  .fab.on svg { color: var(--me); }
+
+  /* markers */
+  .stop-pin {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #fff; border: 3px solid #fff;
+    display: grid; place-items: center; font-weight: 700; font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.35); transition: transform .15s;
+  }
+  .pin-wrap { display: grid; place-items: center; }
+  .zoomed-out .stop-pin { width: 22px; height: 22px; font-size: 10px; border-width: 2px; }
+  .stop-pin.done { background: var(--done); }
+  .stop-pin.off { background: #9aa19d; opacity: .55; width: 16px; height: 16px; border-width: 2px; font-size: 0; }
+  .stop-pin.active { transform: scale(1.3); background: var(--green); }
+  .me-dot {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--me);
+    border: 3px solid #fff; box-shadow: 0 0 0 0 rgba(42,111,219,.6);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(42,111,219,.55); }
+    70% { box-shadow: 0 0 0 16px rgba(42,111,219,0); }
+    100% { box-shadow: 0 0 0 0 rgba(42,111,219,0); }
+  }
+
+  /* bottom sheet */
+  .sheet {
+    position: absolute; z-index: 1001; left: 0; right: 0; bottom: 0;
+    max-height: 72vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    background: var(--card); border-radius: 20px 20px 0 0; box-shadow: var(--shadow);
+    transform: translateY(100%); transition: transform .3s ease;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .sheet.open { transform: translateY(0); }
+  .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 10px auto 0; }
+  .hero {
+    position: relative; height: 180px; margin: 10px 16px 0; border-radius: 14px; overflow: hidden;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+  }
+  .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero .num {
+    position: absolute; left: 12px; top: 12px; background: rgba(0,0,0,.55); color: #fff;
+    font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px;
+  }
+  .hero .ph {
+    position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.9);
+    font-family: Fraunces, Georgia, serif; font-size: 64px;
+  }
+  .body { padding: 14px 16px 18px; }
+  .meta { display: flex; gap: 8px; align-items: center; color: var(--accent); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .meta .dist { color: var(--muted); margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 500; }
+  .body h2 { font-family: Fraunces, Georgia, serif; font-size: 24px; margin: 6px 0 2px; line-height: 1.15; }
+  .tagline { color: var(--muted); font-style: italic; margin: 0 0 12px; }
+  .story { font-size: 16px; line-height: 1.55; margin: 0 0 14px; }
+  .box { border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; font-size: 14px; line-height: 1.45; }
+  .box b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+  .look { background: var(--accent-soft); }
+  .look b { color: var(--accent); }
+  .fact { background: #e6efe9; }
+  .fact b { color: var(--done); }
+  .actions { display: flex; gap: 8px; margin-top: 14px; }
+  .btn {
+    flex: 1; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 12px; padding: 12px 8px; font: 600 14px Inter, sans-serif; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;
+  }
+  .btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+  .btn:disabled { opacity: .35; }
+  .credit { font-size: 11px; color: var(--muted); margin-top: 14px; line-height: 1.4; }
+  .credit a { color: inherit; }
+  .close {
+    position: absolute; right: 24px; top: 26px; z-index: 2; width: 34px; height: 34px; border-radius: 50%;
+    border: 0; background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer;
+  }
+
+  /* intro */
+  .intro {
+    position: absolute; z-index: 1002; inset: 0; background: rgba(20,30,25,.55);
+    display: grid; place-items: end center; padding: 16px;
+  }
+  .intro .panel {
+    background: var(--paper); border-radius: 20px; padding: 22px 20px; max-width: 460px; width: 100%;
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+  .intro h2 { font-family: Fraunces, Georgia, serif; margin: 0 0 6px; font-size: 26px; }
+  .intro p { margin: 0 0 10px; line-height: 1.5; color: var(--muted); }
+  .intro .stats { display: flex; gap: 10px; margin: 14px 0 18px; }
+  .intro .stat { flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px; text-align: center; }
+  .intro .stat strong { display: block; font-size: 20px; color: var(--ink); }
+  .intro .stat span { font-size: 12px; color: var(--muted); }
+  .intro .panel { max-height: calc(100vh - 32px); overflow-y: auto; }
+  .starts { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 14px; }
+  .start-opt {
+    display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 12px 8px 8px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    font: inherit; color: inherit; text-align: left; cursor: pointer;
+  }
+  .start-opt.sel { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); background: #eef3f0; }
+  .start-opt .thumb {
+    flex: none; width: 46px; height: 46px; border-radius: 8px; object-fit: cover;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+  }
+  .start-opt strong { display: block; font-size: 15px; }
+  .start-opt span { font-size: 12px; color: var(--muted); }
+  button.progress { border: 0; color: #fff; font: 600 12px Inter, sans-serif; cursor: pointer; }
+  .hidden { display: none !important; }
+  .toast {
+    position: absolute; z-index: 1003; left: 50%; top: calc(env(safe-area-inset-top) + 76px);
+    transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: 999px; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,.25);
+    max-width: calc(100% - 32px); text-align: center;
+  }
+  .leaflet-control-attribution { font-size: 10px; }
+
+  @media (max-width: 759px) {
+    .intro .panel { padding: 18px 16px; }
+    .intro h2 { font-size: 22px; }
+    .starts { gap: 6px; margin: 10px 0 12px; }
+    .start-opt { padding: 6px 10px 6px 6px; gap: 10px; }
+    .start-opt .thumb { width: 36px; height: 36px; }
+    .start-opt strong { font-size: 14px; }
+  }
+  @media (max-height: 560px) {
+    .hero { height: 120px; }
+    .sheet { max-height: 82vh; }
+  }
+  @media (min-width: 760px) {
+    .sheet {
+      left: 16px; right: auto; top: 84px; bottom: 16px; width: 400px; max-height: none;
+      border-radius: 20px; transform: translateX(calc(-100% - 24px));
+    }
+    .sheet.open { transform: none; }
+    .sheet .grab { display: none; }
+    .fab { bottom: 16px; }
+    .intro { place-items: center start; background: rgba(20,30,25,.25); }
+    .intro .panel { width: 400px; margin-bottom: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<header class="top">
+  <div class="grow">
+    <h1 id="walkTitle">Station to Swan</h1>
+    <div class="sub" id="walkSub">Perth heritage walk</div>
+  </div>
+  <button class="progress" id="changeStart">Change start</button>
+  <div class="progress" id="progress">0 / 0 visited</div>
+</header>
+
+<button class="fab" id="locate" aria-label="Show my location">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+</button>
+
+<section class="sheet" id="sheet" aria-live="polite">
+  <div class="grab"></div>
+  <button class="close" id="close" aria-label="Close">×</button>
+  <div class="hero" id="hero"></div>
+  <div class="body">
+    <div class="meta"><span id="built"></span><span class="dist" id="dist"></span></div>
+    <h2 id="name"></h2>
+    <p class="tagline" id="tagline"></p>
+    <p class="story" id="story"></p>
+    <div class="box look"><b>Look for</b><span id="look"></span></div>
+    <div class="box fact"><b>Did you know?</b><span id="fact"></span></div>
+    <div class="actions">
+      <button class="btn" id="prev">‹ Prev</button>
+      <button class="btn" id="listen">🔊 Listen</button>
+      <button class="btn primary" id="next">Next ›</button>
+    </div>
+    <p class="credit">
+      Guide written by <span id="modelName">gemma3</span>, an open-weight model running locally via Ollama, from
+      <a id="wiki" target="_blank" rel="noopener">this Wikipedia article</a> (CC BY-SA).
+    </p>
+  </div>
+</section>
+
+<div class="intro" id="intro">
+  <div class="panel">
+    <h2>Perth Heritage Walk</h2>
+    <p>A self-guided walk through Perth's old city. Where would you like to start?</p>
+    <div class="starts" id="starts" role="radiogroup" aria-label="Starting point"></div>
+    <button class="btn primary" id="start" style="width:100%">Start the walk</button>
+    <p class="credit">Stops open automatically when you're within 40 m. Location stays on your phone.</p>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const WALK = /*__STOPS__*/null;
+const NEAR_M = 40;
+
+const $ = id => document.getElementById(id);
+const stops = WALK.stops;
+
+// visited state is a per-phone convenience only
+const store = {
+  get() { try { return JSON.parse(localStorage.getItem('s2s-visited') || '[]'); } catch { return []; } },
+  set(v) { try { localStorage.setItem('s2s-visited', JSON.stringify(v)); } catch {} },
+};
+const visited = new Set(store.get());
+
+function metres(a, b) {
+  const R = 6371000, toR = x => x * Math.PI / 180;
+  const dLat = toR(b.lat - a.lat), dLon = toR(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(toR(a.lat)) * Math.cos(toR(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// --- map ---
+const map = L.map('map', { zoomControl: false, attributionControl: true });
+// tile.openstreetmap.org refuses pages opened as a local file (403), so use community
+// OSM servers that don't, and fall back to the next one if tiles keep failing
+const OSM = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const TILES = [
+  ['https://tile.openstreetmap.de/{z}/{x}/{y}.png', { maxZoom: 19, attribution: OSM }],
+  ['https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19, subdomains: 'abc', attribution: OSM + ', tiles by HOT' }],
+];
+let tileIdx = 0, tileErrors = 0, tiles;
+function useTiles(i) {
+  if (tiles) map.removeLayer(tiles);
+  tiles = L.tileLayer(...TILES[i]).addTo(map);
+  tiles.on('tileerror', () => {
+    if (++tileErrors >= 4 && tileIdx < TILES.length - 1) { tileErrors = 0; useTiles(++tileIdx); }
+  });
+}
+useTiles(0);
+
+// --- starting points: walk on to the river, or from the river back up to the station ---
+const STARTS = [
+  { stop: 0, dir: 1 },   // Perth Station: the full walk
+  { stop: 2, dir: 1 },   // Palace Hotel
+  { stop: 5, dir: 1 },   // Perth Town Hall
+  { stop: 7, dir: 1 },   // St George's Cathedral: lunch-break length
+  { stop: 11, dir: -1 }, // Swan Bells: full walk in reverse
+];
+const routeFor = o => o.dir > 0
+  ? stops.map((_, i) => i).slice(o.stop)
+  : stops.map((_, i) => i).slice(0, o.stop + 1).reverse();
+function routeStats(r) {
+  let m = 0;
+  for (let k = 1; k < r.length; k++) m += metres(stops[r[k - 1]], stops[r[k]]);
+  return { km: (m / 1000).toFixed(1), min: Math.round(m / 80 + r.length * 2) }; // ~4.8 km/h + 2 min per stop
+}
+const prefs = {
+  get() { try { return Number(localStorage.getItem('s2s-start')) || 0; } catch { return 0; } },
+  set(v) { try { localStorage.setItem('s2s-start', String(v)); } catch {} },
+};
+let startChoice = Math.min(prefs.get(), STARTS.length - 1);
+let route = routeFor(STARTS[startChoice]);
+
+L.polyline(stops.map(s => [s.lat, s.lon]), { color: '#1f3a32', weight: 3, opacity: .2, dashArray: '2 10', lineCap: 'round' }).addTo(map);
+const routeLine = L.polyline([], { color: '#1f3a32', weight: 4, opacity: .9, dashArray: '2 10', lineCap: 'round' }).addTo(map);
+
+const markers = stops.map((s, i) => {
+  const m = L.marker([s.lat, s.lon], { icon: pinIcon(i) }).addTo(map);
+  m.on('click', () => openStop(i));
+  return m;
+});
+function pinIcon(i, active = false) {
+  const pos = route.indexOf(i);
+  const cls = ['stop-pin', visited.has(i) ? 'done' : '', pos < 0 && !active ? 'off' : '', active ? 'active' : ''].join(' ');
+  return L.divIcon({ className: 'pin-wrap', html: `<div class="${cls}">${pos < 0 ? '' : pos + 1}</div>`, iconSize: [32, 32], iconAnchor: [16, 16] });
+}
+function refreshPins() {
+  markers.forEach((m, i) => { m.setIcon(pinIcon(i, i === current)); m.setZIndexOffset(route.includes(i) ? 500 : 0); });
+}
+
+// keep the route visible beside/above whatever panel is open
+const isWide = () => matchMedia('(min-width: 760px)').matches;
+function fitRoute() {
+  const b = L.latLngBounds(route.map(i => [stops[i].lat, stops[i].lon]));
+  const introOpen = !$('intro').classList.contains('hidden');
+  if (isWide()) {
+    map.fitBounds(b, { paddingTopLeft: [introOpen || current >= 0 ? 450 : 40, 100], paddingBottomRight: [40, 40], maxZoom: 17 });
+  } else {
+    const bottom = introOpen ? document.querySelector('.intro .panel').offsetHeight + 32
+      : current >= 0 ? $('sheet').offsetHeight + 20 : 40;
+    map.fitBounds(b, { paddingTopLeft: [24, 90], paddingBottomRight: [24, bottom], maxZoom: 17 });
+  }
+}
+const sizePins = () => $('map').classList.toggle('zoomed-out', map.getZoom() < 16);
+map.on('zoomend', sizePins);
+
+function setRoute(k) {
+  startChoice = k;
+  route = routeFor(STARTS[k]);
+  routeLine.setLatLngs(route.map(i => [stops[i].lat, stops[i].lon]));
+  const first = stops[route[0]], last = stops[route[route.length - 1]];
+  $('walkTitle').textContent = STARTS[k].dir > 0 ? WALK.walk.split(':')[0] : 'Swan to Station';
+  $('walkSub').textContent = `${first.name} to ${last.name}`;
+  document.querySelectorAll('.start-opt').forEach((b, j) => {
+    b.classList.toggle('sel', j === k); b.setAttribute('aria-checked', j === k);
+  });
+  updateProgress(); refreshPins(); fitRoute();
+}
+
+// --- intro: pick a starting point ---
+$('modelName').textContent = WALK.model;
+$('starts').innerHTML = STARTS.map((o, k) => {
+  const s = stops[o.stop], r = routeFor(o), st = routeStats(r);
+  const label = o.dir < 0 ? `${r.length} stops, back up to the station` : r.length === stops.length ? `${r.length} stops, the full walk` : `${r.length} stops`;
+  return `<button class="start-opt" role="radio" data-k="${k}">
+    ${s.image ? `<img class="thumb" src="${s.image}" alt="">` : '<div class="thumb"></div>'}
+    <div><strong>${s.name}</strong><span>${label} · ${st.km} km · ${st.min} min</span></div>
+  </button>`;
+}).join('');
+document.querySelectorAll('.start-opt').forEach(b => b.onclick = () => setRoute(Number(b.dataset.k)));
+$('start').onclick = () => {
+  prefs.set(startChoice);
+  $('intro').classList.add('hidden');
+  startTracking();
+  openStop(firstUnvisited());
+};
+$('changeStart').onclick = () => { closeSheet(); $('intro').classList.remove('hidden'); fitRoute(); };
+
+function firstUnvisited() { const i = route.find(i => !visited.has(i)); return i === undefined ? route[0] : i; }
+function updateProgress() {
+  const seen = route.filter(i => visited.has(i)).length;
+  $('progress').textContent = `${seen} / ${route.length}`;
+  $('progress').title = `${seen} of ${route.length} stops visited`;
+}
+
+// --- stop sheet ---
+let current = -1;
+let me = null;
+function openStop(i) {
+  current = i;
+  const s = stops[i], pos = route.indexOf(i);
+  speechSynthesis.cancel();
+  $('hero').innerHTML = (s.image
+    ? `<img src="${s.image}" alt="${s.name}" onerror="this.remove()">`
+    : `<div class="ph">${i + 1}</div>`) + `<span class="num">${pos < 0 ? 'Not on your route' : `Stop ${pos + 1} of ${route.length}`}</span>`;
+  $('built').textContent = s.built ? `Built ${s.built}` : '';
+  $('name').textContent = s.name;
+  $('tagline').textContent = s.tagline;
+  $('story').textContent = s.story;
+  $('look').textContent = s.look_for;
+  $('fact').textContent = s.fun_fact;
+  $('wiki').href = s.wiki_url;
+  $('prev').disabled = pos <= 0;
+  $('next').textContent = pos < 0 ? 'Back to route ›' : pos === route.length - 1 ? 'Finish ✓' : 'Next ›';
+  updateDistance();
+  $('sheet').scrollTop = 0;
+  $('sheet').classList.add('open');
+  requestAnimationFrame(() => {
+    const wide = isWide();
+    const h = $('sheet').offsetHeight, w = $('sheet').offsetWidth;
+    document.documentElement.style.setProperty('--sheet-h', wide ? '0px' : h + 'px');
+    // centre the stop in the map area left visible beside (wide) or above (phone) the sheet
+    const z = Math.max(map.getZoom(), 17);
+    const pt = map.project([s.lat, s.lon], z).add(wide ? [-(w + 16) / 2, 0] : [0, h / 2 - 30]);
+    map.setView(map.unproject(pt, z), z, { animate: true });
+  });
+  history.replaceState(null, '', '#stop=' + (i + 1));
+  refreshPins();
+}
+function closeSheet() {
+  $('sheet').classList.remove('open');
+  document.documentElement.style.setProperty('--sheet-h', '0px');
+  speechSynthesis.cancel();
+  current = -1; refreshPins();
+  history.replaceState(null, '', location.pathname);
+}
+function markVisited(i) {
+  if (visited.has(i)) return;
+  visited.add(i); store.set([...visited]); updateProgress(); refreshPins();
+}
+$('close').onclick = closeSheet;
+$('prev').onclick = () => { const p = route.indexOf(current); if (p > 0) openStop(route[p - 1]); };
+$('next').onclick = () => {
+  const p = route.indexOf(current);
+  if (p < 0) return openStop(firstUnvisited());
+  markVisited(current);
+  if (p < route.length - 1) return openStop(route[p + 1]);
+  closeSheet();
+  const seen = route.filter(i => visited.has(i)).length;
+  toast(STARTS[startChoice].dir > 0
+    ? `Walk complete: ${seen} of ${route.length} stops. Now go touch some grass by the river 🌿`
+    : `Walk complete: ${seen} of ${route.length} stops. Your train's waiting 🚆`);
+};
+$('listen').onclick = () => {
+  if (speechSynthesis.speaking) { speechSynthesis.cancel(); return; }
+  const s = stops[current];
+  const u = new SpeechSynthesisUtterance(`${s.name}. ${s.story} Look for: ${s.look_for}`);
+  u.lang = 'en-AU'; u.rate = 0.98;
+  speechSynthesis.speak(u);
+};
+
+// --- live location ---
+let meMarker = null, watching = false, following = false;
+function startTracking() {
+  if (watching || !navigator.geolocation) return;
+  watching = true;
+  navigator.geolocation.watchPosition(onPos, err => toast('Location unavailable, so tap the dots to explore.'), {
+    enableHighAccuracy: true, maximumAge: 5000, timeout: 20000,
+  });
+}
+function onPos(p) {
+  me = { lat: p.coords.latitude, lon: p.coords.longitude };
+  if (!meMarker) {
+    meMarker = L.marker([me.lat, me.lon], { icon: L.divIcon({ className: '', html: '<div class="me-dot"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), zIndexOffset: 1000 }).addTo(map);
+  } else meMarker.setLatLng([me.lat, me.lon]);
+  if (following) map.panTo([me.lat, me.lon]);
+  updateDistance();
+  // arriving at a stop opens it
+  stops.forEach((s, i) => {
+    if (!visited.has(i) && metres(me, s) < NEAR_M) {
+      markVisited(i);
+      if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+      toast(`You've arrived at ${s.name}`);
+      openStop(i);
+    }
+  });
+}
+function updateDistance() {
+  if (current < 0) return;
+  $('dist').textContent = me ? `${Math.round(metres(me, stops[current]))} m away` : '';
+}
+$('locate').onclick = () => {
+  startTracking();
+  following = !following;
+  $('locate').classList.toggle('on', following);
+  if (me && following) map.setView([me.lat, me.lon], 17);
+  else if (!following) fitRoute();
+};
+
+let toastTimer;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), 4000);
+}
+// deep link: index.html#stop=4 opens that stop straight away
+const linked = Number((location.hash.match(/stop=(\d+)/) || [])[1]);
+// index.html#start=4 preselects a starting point
+const linkedStart = Number((location.hash.match(/start=(\d+)/) || [])[1]);
+if (linkedStart >= 1 && linkedStart <= STARTS.length) startChoice = linkedStart - 1;
+setRoute(startChoice);
+if (linked >= 1 && linked <= stops.length) { $('intro').classList.add('hidden'); openStop(linked - 1); }
+</script>
+</body>
+</html>

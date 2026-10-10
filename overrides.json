@@ -1,0 +1,16 @@
+{
+  "_about": "Human fact-check of gemma3's drafts, checked against the Wikipedia text. Applied by build_page.py, keyed by stop number.",
+  "4": {
+    "fun_fact": "The chiming clocks at each end were made by the Synchronome Company of London for £5,000. Watch for the jousting knights on the hour.",
+    "story": "You’re standing before London Court, a truly remarkable arcade built in 1937 by Claude de Bernales. It’s a fantastic example of mock Tudor architecture, designed to connect Perth Railway Station with The Esplanade. You can still see the ornate wrought-iron gates and the impressive statues of Dick Whittington and Sir Walter Raleigh gazing down at the shoppers below. The clocks, made by the Synchronome Company of London, chime every quarter-hour, adding to the magical atmosphere."
+  },
+  "5": {
+    "look_for": "The American Romanesque facade, designed so the theatre and the hotel next door match."
+  },
+  "8": {
+    "look_for": "The walls of local brick trimmed with limestone from Rottnest Island."
+  },
+  "12": {
+    "built": "2000 (bells 1988)"
+  }
+}

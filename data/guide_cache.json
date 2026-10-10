@@ -1,0 +1,98 @@
+{
+  "Perth railway station": {
+    "name": "Perth Railway Station",
+    "built": "1881, 1894",
+    "tagline": "A hub connecting Perth to the wider state.",
+    "story": "You’re standing before Perth Railway Station, a vital interchange for the entire Transperth network. Originally opened in 1881, it quickly became too small for the growing railway. A larger station, designed by George Temple-Poole, was built in 1894, and it’s been expanded many times since, including the Citiplace Centre. It was once the centre of Western Australian Government Railways, and continues to serve as a major transport hub today.",
+    "look_for": "Notice the large, arched windows on the building’s eastern facade.",
+    "fun_fact": "The station’s forecourt was once used for car parking, a surprising change from its original design and function as a railway hub."
+  },
+  "General Post Office, Perth": {
+    "name": "General Post Office, Perth",
+    "built": "1923",
+    "tagline": "A magnificent Beaux-Arts landmark with a rich postal past.",
+    "story": "You’re standing before a truly impressive building! Completed in 1923, this was once the largest building in Perth and served as the city’s central post office for many decades. Construction was a lengthy process, significantly delayed by World War I and material shortages. It originally housed a vast network of postal and telecommunication services across Western Australia.",
+    "look_for": "Notice the detailed stone carvings around the entrance columns.",
+    "fun_fact": "The original plans called for Australian blackwood flooring, but a substitute of locally sourced jarrah was used due to steel supply issues during the war."
+  },
+  "Palace Hotel, Perth": {
+    "name": "Palace Hotel, Perth",
+    "built": "1897",
+    "tagline": "A grand landmark of Perth’s golden era.",
+    "story": "You’re standing before the Palace Hotel, a magnificent building that witnessed Perth’s incredible transformation. Originally opened in 1897 as a hotel during the gold rush, it was once described as ‘one of the most beautiful and elegant hotels in Australasia’. It offered a luxurious experience to commercial travellers and served as a symbol of the state’s wealth. Later, it transitioned to banking chambers, retaining its impressive heritage.",
+    "look_for": "Notice the intricate brickwork detailing on the building’s façade.",
+    "fun_fact": "The building’s construction cost £64,000 in 1897 – equivalent to over A$11 million today, showcasing its significant investment at the time."
+  },
+  "London Court": {
+    "name": "London Court",
+    "built": "1937",
+    "tagline": "A Tudor dream in the heart of Perth!",
+    "story": "You’re standing before London Court, a truly remarkable arcade built in 1937 by Claude de Bernales. It’s a fantastic example of mock Tudor architecture, designed to connect Perth Railway Station with The Esplanade. You can still see the ornate wrought-iron gates and the impressive statues of Dick Whittington and Sir Walter Raleigh gazing down at the shoppers below. The clocks, a gift from the Synchronome Company, chime regularly, adding to the magical atmosphere.",
+    "look_for": "The large wrought-iron gates at either end of the arcade.",
+    "fun_fact": "The clocks were originally imported from London and cost a significant sum – equivalent to over A$12 million today!"
+  },
+  "Theatre Royal and Metropole Hotel": {
+    "name": "Theatre Royal and Metropole Hotel",
+    "built": "1893, 1897",
+    "tagline": "A historic landmark showcasing Perth's vibrant entertainment past.",
+    "story": "You’re standing before a building with a rich story! Built by businessman Thomas Molloy, the Theatre Royal and Metropole Hotel opened in 1897, following the completion of the hotel in 1893. Initially, Perth lacked theatres, but Molloy’s vision brought the first theatre to the city. It became a popular picture theatre, even hosting the first demonstration of new cinema technology in Australia. Later, it transitioned to a cinema, undergoing significant renovations to cater to film viewing, and finally closed in 1977.",
+    "look_for": "Look for the curved screen installed in 1965.",
+    "fun_fact": "The theatre’s original steel beam, spanning the entire width of the building, was removed during renovations in 1965 to create a 40-foot curved screen."
+  },
+  "Perth Town Hall": {
+    "name": "Perth Town Hall",
+    "built": "1867-1870",
+    "tagline": "A unique landmark built by convict labour.",
+    "story": "You’re standing before Perth Town Hall, a truly remarkable building! It’s the only town hall in Australia constructed by convicts, a testament to the efforts of both convict and free men between 1867 and 1870. Originally the tallest structure in Perth, it was designed in the Victorian Free Gothic style and features distinctive convict motifs, including arrow-shaped windows and hangman’s rope decorations. The foundation stone was laid in 1867 amidst a significant ceremony, though a heavy downpour disrupted the event!",
+    "look_for": "Notice the Flemish bond brickwork on the building's exterior.",
+    "fun_fact": "During the 20th century, shops were incorporated into the building’s ground floor, making it a bustling hub for the city."
+  },
+  "Treasury Buildings, Perth": {
+    "name": "Treasury Buildings",
+    "built": "1890s",
+    "tagline": "A historic cornerstone of Perth’s government past.",
+    "story": "You’re standing before the Treasury Buildings, a vital part of Perth’s history. Originally known as Government Buildings, this complex housed numerous government departments and offices for many years. It's fascinating to consider that this very spot was once the site of Perth’s founding in 1829. The buildings witnessed significant events, including protests in 1929, and have recently been revitalised as part of Cathedral Square.",
+    "look_for": "Notice the ornate sandstone facade of the building.",
+    "fun_fact": "The site’s importance is linked to Perth’s origins, reflecting its role as the city’s initial foundation point."
+  },
+  "St George's Cathedral, Perth": {
+    "name": "St George's Cathedral",
+    "built": "1879 – 1888",
+    "tagline": "A magnificent Victorian Gothic landmark in the heart of Perth.",
+    "story": "You’re standing before St George’s Cathedral, a truly impressive building! Constructed between 1879 and 1888, it’s a prime example of Victorian Academic Gothic architecture, designed by Edmund Blacket. It sits at the corner of St Georges Terrace and Cathedral Avenue, a key part of Perth’s heritage precinct. The cathedral has been carefully maintained over the years, including a significant restoration between 2005 and 2008, and is a place of great significance to the Anglican community and the city.",
+    "look_for": "Notice the rose-coloured brickwork of the interior.",
+    "fun_fact": "The cathedral’s roof has undergone several changes, from slate to tiles, and back again, reflecting the ongoing efforts to preserve this historic landmark."
+  },
+  "The Deanery, Perth": {
+    "name": "The Deanery, Perth",
+    "built": "Late 1850s",
+    "tagline": "A historic landmark with a poignant past.",
+    "story": "You stand before The Deanery, a building with a complex and fascinating history. Originally built in the late 1850s as a residence and office for the first Dean of Perth, Reverend George Pownall, it replaced the site of the old Perth Gaol.  Remarkably, it was constructed by former convicts, reflecting the era’s views.  Later, it served as a residence for over ninety years, undergoing several renovations to adapt to changing times, and narrowly avoided demolition in 1953 thanks to public outcry and a successful appeal.",
+    "look_for": "Notice the arched doorway, a key feature of the Gothic Revival style.",
+    "fun_fact": "The Deanery was built on land where a respected Aboriginal elder, Midgegooroo, was executed in 1833, highlighting the complex and often troubled history of this site."
+  },
+  "Government House, Perth": {
+    "name": "Government House, Perth",
+    "built": "1859 – 1864",
+    "tagline": "A historic landmark reflecting Western Australia's rich heritage.",
+    "story": "You're standing before Government House, a magnificent building that has served as the official residence of the Governor of Western Australia since 1864. Initially, governors resided in tents and temporary structures on this very site, dating back to the establishment of the Swan River Colony in 1829. This current building, a Jacobean Revival style mansion, is the third to occupy this location, representing centuries of governance and history within the heart of Perth.",
+    "look_for": "Notice the square mullioned windows on the building's facade.",
+    "fun_fact": "The building’s construction involved a significant workforce of convicts, reflecting the era in which it was built and contributing to its unique heritage."
+  },
+  "Old Court House, Perth": {
+    "name": "Old Court House, Perth",
+    "built": "1836",
+    "tagline": "A cornerstone of Perth’s early legal and cultural history.",
+    "story": "You’re standing before the Old Court House, a truly remarkable building! Completed in 1836, it was the first court building in Perth, designed by Henry Reveley. Initially used for court sessions and even as a place of worship, it played a vital role in the colony’s development. It served as a schoolroom and a gathering place for public meetings, witnessing the birth of Perth’s cultural life.  It’s seen a lot of history!",
+    "look_for": "Notice the doric pillars supporting the entry portico.",
+    "fun_fact": "Henry Reveley, the engineer behind this building, also designed the Round House in Fremantle and several other significant colonial structures – a truly prolific figure!"
+  },
+  "Swan Bells": {
+    "name": "Swan Bells",
+    "built": "1988",
+    "tagline": "A magnificent chime echoing Perth’s rich history.",
+    "story": "You’re standing before the Bell Tower, a stunning copper and glass structure overlooking the Swan River. These bells, a remarkable collection of sixteen, were originally from St Martin-in-the-Fields church in London and donated to Western Australia as part of the 1988 bicentenary. Twelve of the bells were recast in the 16th century and restored, while the six newer bells were commissioned with metals from Western Australia, reflecting the region’s mining heritage. They’re even said to have rung as James Cook set sail for Australia!",
+    "look_for": "Notice the copper sails that wrap around the tower’s spire.",
+    "fun_fact": "These bells are incredibly rare; they are the only set known to have left England, and they were rung as James Cook prepared for his voyage to Australia."
+  }
+}
