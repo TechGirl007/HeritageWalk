@@ -6,6 +6,12 @@ Open the page on your phone, follow the dotted trail, and each stop's story open
 
 Built for the [DEV Hacktoberfest 2026 Open-Source AI Challenge, Week 1: "Touch Grass"](https://dev.to/challenges/hacktoberfest-week1-2026-10-05).
 
+**👉 [Try the walk](https://techgirl007.github.io/HeritageWalk/)** (best on a phone)
+
+![Start picker: choose one of five starting points along the trail, with the chosen route previewed on the map](screenshots/landing-page.jpg)
+
+![Palace Hotel stop: photo, year built, gemma3's guide text, something to look for, and a fun fact](screenshots/palace-hotel.jpg)
+
 ## How it works
 
 ```
