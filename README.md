@@ -26,9 +26,8 @@ Wikipedia ─► fetch_wiki.py ─► gemma3 via Ollama ─► stops.json ─►
 3. `overrides.json` holds the corrections a human made after checking gemma's drafts against Wikipedia.
 4. `build_page.py` bakes everything into one self-contained `index.html`, with a [Leaflet](https://leafletjs.com) map and [OpenStreetMap](https://www.openstreetmap.org) tiles.
 
-On an iPhone:
+## On a Phone
 
-<p>
   <img src="screenshots/phone-map.jpg" width="280" alt="The dotted trail and numbered stops on a phone">
   <img src="screenshots/phone-stop.jpg" width="280" alt="Treasury Buildings stop card on a phone">
 </p>
